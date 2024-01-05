@@ -1,7 +1,7 @@
 ![IRIS](./iris.png)
 
 
-# IRIS - Image Reader Server
+# IRIS - Image Reading Server
 IRIS utilizes one specific ability of multimodal large language models - image description. How to use it? You decide.
 My intention is to make IRIS a controllable gateway for selected LLMs that is easy to deploy and customize. Currently only Google Gemini is supported. IRIS can be used with [Iriso app](https://github.com/Egodx/iriso) or standalone.
 
