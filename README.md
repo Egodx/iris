@@ -3,24 +3,24 @@
 
 # IRIS - Image Reader Server
 IRIS utilizes one specific ability of multimodal large language models - image description. How to use it? You decide.
-My intention is to make IRIS a controllable gateway for selected LLMs that is easy to deploy and customize. Currently only Google Gemini is supported. IRIS can be used with the [Iriso app](https://github.com/Egodx/iriso) or standalone.
+My intention is to make IRIS a controllable gateway for selected LLMs that is easy to deploy and customize. Currently only Google Gemini is supported. IRIS can be used with [Iriso app](https://github.com/Egodx/iriso) or standalone.
 
 ## Why not use Gemini or GPT4V API directly?
 - You do not share your API keys  
 - One interface for multiple LLMs
-- Currently Gemini and GPT4V are regionally locked, IRIS can help to avoid this lock
+- Currently Gemini and GPT4V are regionally locked, IRIS helps to avoid this
 - Request rate limiting is under your full control
 - You have control over the prompt to describe images, which makes abuse or jailbreak almost impossible
 - Simple access contol that can be extended to anything you need
  
 ## How to set up
-IRIS is an extendable base for your needs and a backend for the [Iriso app](https://github.com/Egodx/iriso). Therefore, many things have been intentionally simplified to make it easy to deploy even for inexperienced developers. Here are the steps to run on GCP:
+IRIS is an extendable base for your needs and a backend for [Iriso app](https://github.com/Egodx/iriso). Therefore, many things have been intentionally simplified to make it easy to deploy even for inexperienced developers. Here are the steps to run on GCP:
 1. Get yourself a Google account
 2. Activate [VertexAI console](https://cloud.google.com/vertex-ai)
 3. Create a new project
 4. Activate Google Cloud Run, Secret Manager, Artifact Registry (optional)
-5. Set up [Application Default Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc) for Google Cloud. As a result you'll receive `application_default_credentials.json`
-6. Create a secret in Google Secret Manager - Simple json array with access tokens for all IRIS users you need (GUIDs is a good option)
+5. Set up [Application Default Credentials](https://cloud.google.com/docs/authentication/provide-credentials-adc) for Google Cloud. As a result you'll get `application_default_credentials.json`
+6. Create a secret in Google Secret Manager - simple json array with access tokens for all IRIS users you need (use GUIDs or random alphanumeric strings)
     ```
     [
       "TOKEN-ONE-LONG-ENOUGH-AND-HARD-TO-GUESS",
@@ -32,11 +32,11 @@ Store it as `tokens.json`. Since IRIS was originally intended for individuals or
 
 7. Create another secret from  `application_default_credentials.json`
 8. Get two values from VertexAI: `PROJECT` (e.g. random-words-123456) and `LOCATION` (e.g. us-central1)
-9. You can now build your own IRIS server from Dockerfile or use the unmodified server that is available to everyone from the Google Artifcat Registry: `europe-west10-docker.pkg.dev/wide-gecko-408120/egodx/image-reader-server:latest`
+9. You can now build your own IRIS server from Dockerfile or use the unmodified server from Google Artifcat Registry: `europe-west10-docker.pkg.dev/wide-gecko-408120/egodx/image-reader-server:latest`
 10. Create a new service in Google Cloun Run
-    1. Use the Docker repository from step 9 or your repository that is in GAR. DockerHub doesn't work. Your repo must be available under  **https://\*.pkg.dev/**
-    2. Set container port - `21088`
-    3. Create 2 variables: `IRIS_GEMINI_VERTEXAI_LOCATION` and `IRIS_GEMINI_VERTEXAI_PROJECT`. Set the values to `LOCATION` and  `PROJECT` respectively
+    1. Use the Docker repository from step 9 or your own repository in GAR. It must be available under **https://\*.pkg.dev/**. DockerHub doesn't work.
+    2. Set container port to `21088`
+    3. Create 2 variables: `IRIS_GEMINI_VERTEXAI_LOCATION` and `IRIS_GEMINI_VERTEXAI_PROJECT`. Set the values to `LOCATION` and `PROJECT` respectively
     4. Mount your secrets as `/root/.config/gcloud/application_default_credentials.json` and `/usr/node/tokens/tokens.json`
 11. If everything is configured correctly, you can test your IRIS server by sending a request using CURL
 ```
@@ -59,7 +59,7 @@ Now IRIS supports 8 languages:
 * Spanish
 * Turkish
 
-You can add a new language by adding its prompt to the **prompts.json** in the vision provider folder. For example, Gemini provider can support up to 37 languages.
+You can add a new language by adding language code and prompt to **prompts.json** in the vision provider folder. For example, Gemini provider can support [up to 38 languages](https://ai.google.dev/available_regions).
 
 ## Roadmap
 * Improve documentation
