@@ -24,7 +24,7 @@ const describeImage = async (path, langCode) => {
             role: 'user',
             parts: [{
                 inline_data: {
-                    mime_type: 'image/jpg',
+                    mime_type: 'image/jpeg',
                     data: encodedFile
                 }
             }, {text: prompts[langCode]}]
